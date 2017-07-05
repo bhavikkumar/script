@@ -18,21 +18,15 @@ $CreateAccountResponse = (aws organizations create-account --email $email --acco
 $CreateAccountRequestId = $CreateAccountResponse.CreateAccountStatus.Id
 $Status = $CreateAccountResponse.CreateAccountStatus.State
 
+Write-Host "Create Account Request Id: $CreateAccountRequestId"
+
 # Every x seconds check if the account status is now succeeded
 While ($Status -ne "SUCCEEDED")
 {
-  Start-Sleep -s 30
+  Start-Sleep -s 120
   $AccountStatusResponse = (aws organizations describe-create-account-status --create-account-request-id $CreateAccountRequestId --profile $profile) | ConvertFrom-Json
   $AccountId = $AccountStatusResponse.CreateAccountStatusRequest.AccountId
   $Status = $AccountStatusResponse.CreateAccountStatusRequest.State
 }
 
-# Get the current parent, which by default should be the root organization
-$ListParentsResponse = (aws organizations list-parents --child-id $AccountId --profile $profile) | ConvertFrom-Json
-
-$ParentId = $ListParentsResponse.Parents[0].Id
-
-# Move the account to the correct organizational unit
-aws organizations move-account --account-id $AccountId --source-parent-id $ParentId --destination-parent-id $organizationalUnit --profile $profile
-
-Write-Host "Account $name successfully created"
+Write-Host "Account $name with Account Id $AccountId successfully created"
