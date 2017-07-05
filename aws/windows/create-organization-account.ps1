@@ -25,8 +25,8 @@ While ($Status -ne "SUCCEEDED")
 {
   Start-Sleep -s 120
   $AccountStatusResponse = (aws organizations describe-create-account-status --create-account-request-id $CreateAccountRequestId --profile $profile) | ConvertFrom-Json
-  $AccountId = $AccountStatusResponse.CreateAccountStatusRequest.AccountId
-  $Status = $AccountStatusResponse.CreateAccountStatusRequest.State
+  $AccountId = $AccountStatusResponse.CreateAccountStatus.AccountId
+  $Status = $AccountStatusResponse.CreateAccountStatus.State
 }
 
 Write-Host "Account $name with Account Id $AccountId successfully created"
