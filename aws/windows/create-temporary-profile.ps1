@@ -34,7 +34,7 @@ If(![string]::IsNullOrEmpty($Response)) {
 }
 
 If (![string]::IsNullOrEmpty($assumeRoleAccount) -and ![string]::IsNullOrEmpty($roleName)) {
-  $RoleProfileName = $username + "-" + $roleName
+  $RoleProfileName = $username + "-" + $roleName + "-" + $assumeRoleAccount
   $roleAccount = "arn:aws:iam::" + $assumeRoleAccount + ":role/" + $roleName
 
   $AssumeRoleResponse = (aws sts assume-role --role-arn $roleAccount --role-session-name $RoleProfileName --profile $MFAProfile) | ConvertFrom-Json
